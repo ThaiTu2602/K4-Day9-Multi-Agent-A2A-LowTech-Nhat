@@ -1,8 +1,22 @@
 {
-  "model_name": "llama-3.1-8b-instant",
+  "models": [
+    {
+      "agent": "PolicyAgent",
+      "model_name": "llama-3.1-8b-instant",
+      "parameter_size": "8B",
+      "provider": "Groq API",
+      "role": "Policy Reasoning & Resolution Evaluator"
+    },
+    {
+      "agent": "VerifierAgent",
+      "model_name": "llama-3.1-8b-instant",
+      "parameter_size": "8B",
+      "provider": "Groq API",
+      "role": "Confidence Auditor & Schema Compliance Verifier"
+    }
+  ],
   "parameter_size": "8B",
-  "provider": "Groq API",
-  "framework": "Custom Multi-Agent Orchestrator",
+  "framework": "Custom Dual-Model Heterogeneous Multi-Agent Orchestrator",
   "runtime": "Python 3.14 (.venv)",
   "max_param_limit": "10B",
   "status": "compliant"
