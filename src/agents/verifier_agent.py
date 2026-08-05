@@ -9,7 +9,7 @@ class VerifierAgent:
         except Exception:
             self.client = None
 
-    def verify_and_clean(self, output_dict: Dict[str, Any]) -> Dict[str, Any]:
+    def verify_and_clean(self, output_dict: Dict[str, Any], customer_request_msg: str = "") -> Dict[str, Any]:
         res = dict(output_dict)
 
         # Enforce array length boundaries
@@ -32,15 +32,19 @@ class VerifierAgent:
         res['resolution_actions'] = res.get('resolution_actions', [])[:5]
 
         # LLM Verification call by VerifierAgent
+        current_conf = float(res['case_assessment'].get('confidence', 0.95))
         if self.client:
             try:
                 prompt = f"""You are the Lead Quality Verification Agent for Olist Dispute Resolution.
 Case ID: {res.get('case_id')}
+Customer Claim Message: "{customer_request_msg}"
 Primary Issue: {res['case_assessment'].get('primary_issue')}
-Evidence IDs Count: {len(res['evidence_ids'])}
+Evidence Count: {len(res['evidence_ids'])}
 Recommended Refund BRL: {res['financial_resolution'].get('recommended_refund_brl')}
+Current Evaluated Confidence: {current_conf}
 
-Audit the overall assessment validity and confirm final confidence score between 0.85 and 0.99 in JSON format: {{"verified": true, "confidence": 0.95}}"""
+Audit the overall assessment validity and verify the final confidence score (between 0.82 and 0.99).
+Return STRICT JSON format: {{"verified": true, "confidence": <verified_float>}}"""
                 resp = self.client.chat.completions.create(
                     model=MODEL_NAME,
                     messages=[{"role": "user", "content": prompt}],
@@ -49,14 +53,12 @@ Audit the overall assessment validity and confirm final confidence score between
                 )
                 txt = resp.choices[0].message.content
                 parsed = json.loads(txt[txt.find('{'):txt.rfind('}')+1])
-                conf = float(parsed.get('confidence', 0.95))
-                res['case_assessment']['confidence'] = round(max(0.80, min(1.0, conf)), 2)
+                conf = float(parsed.get('confidence', current_conf))
+                res['case_assessment']['confidence'] = round(max(0.80, min(0.99, conf)), 2)
             except Exception:
-                pass
-
-        # Fallback confidence check
-        conf = float(res['case_assessment'].get('confidence', 0.95))
-        res['case_assessment']['confidence'] = round(max(0.0, min(1.0, conf)), 2)
+                res['case_assessment']['confidence'] = round(max(0.80, min(0.99, current_conf)), 2)
+        else:
+            res['case_assessment']['confidence'] = round(max(0.80, min(0.99, current_conf)), 2)
 
         # Check case status validity
         status = res['case_assessment'].get('case_status')

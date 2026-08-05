@@ -10,7 +10,7 @@ class PolicyAgent:
             print(f"Warning: Groq client init failed: {e}. Falling back to rule-based confidence.")
             self.client = None
 
-    def evaluate(self, order_dict: Dict[str, Any], delivery_res: Dict[str, Any], payment_res: Dict[str, Any], customer_res: Dict[str, Any], items: List[Dict[str, Any]], categories: List[str]) -> Dict[str, Any]:
+    def evaluate(self, order_dict: Dict[str, Any], delivery_res: Dict[str, Any], payment_res: Dict[str, Any], customer_res: Dict[str, Any], items: List[Dict[str, Any]], categories: List[str], customer_request_msg: str = "") -> Dict[str, Any]:
         order_status = order_dict.get('order_status', '')
         delivery_var = delivery_res.get('delivery_variance_hours')
         late_sellers = delivery_res.get('late_handoff_seller_ids', [])
@@ -111,19 +111,31 @@ class PolicyAgent:
         # Case status
         case_status = "action_required" if refund_brl > 0 else "no_action"
 
-        # Confidence calculation via Groq LLM or rule
-        confidence = 0.95
+        # Rule-based default confidence initialization
+        if primary_issue in ["canceled_order_paid", "unavailable_order_paid"]:
+            base_conf = 0.98
+        elif primary_issue in ["late_delivery_seller", "late_delivery_logistics"]:
+            base_conf = 0.95
+        elif primary_issue == "valid_split_payment":
+            base_conf = 0.92
+        else:
+            base_conf = 0.88
+
+        confidence = base_conf
+
+        # Dynamic confidence evaluation via Groq LLM considering customer_request_msg
         if self.client:
             try:
-                prompt = f"""You are an expert dispute resolution auditor for Olist e-commerce.
-Primary Issue: {primary_issue}
-Cause Code: {cause_code}
-Delivery Variance Hours: {delivery_var}
-Refund: {refund_brl} BRL
-Reconciled: {reconciled}
-Order Status: {order_status}
+                prompt = f"""You are an expert e-commerce dispute resolution policy auditor for Olist platform.
+Customer Message: "{customer_request_msg}"
+Evaluated Issue: {primary_issue} (Cause Code: {cause_code})
+Order Status: {order_status} | Delivery Variance Hours: {delivery_var} | Reconciled: {reconciled}
+Recommended Refund: {refund_brl} BRL | Number of Payments: {num_payments}
 
-Output JSON format: {{"confidence": 0.95, "reason": "..."}}"""
+Assess the confidence of this finding given the customer's request and empirical evidence.
+Calculate a dynamic confidence score between 0.82 and 0.99.
+Return STRICT JSON format: {{"confidence": <float_between_0.82_and_0.99>, "reasoning": "<short_explanation>"}}"""
+
                 resp = self.client.chat.completions.create(
                     model=MODEL_NAME,
                     messages=[{"role": "user", "content": prompt}],
@@ -132,8 +144,8 @@ Output JSON format: {{"confidence": 0.95, "reason": "..."}}"""
                 )
                 txt = resp.choices[0].message.content
                 parsed = json.loads(txt[txt.find('{'):txt.rfind('}')+1])
-                conf = float(parsed.get('confidence', 0.95))
-                confidence = max(0.80, min(1.0, conf))
+                conf = float(parsed.get('confidence', base_conf))
+                confidence = max(0.80, min(0.99, conf))
             except Exception as e:
                 pass
 
