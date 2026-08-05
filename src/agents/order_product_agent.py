@@ -21,18 +21,17 @@ def investigate(data: OlistData, order_id: str) -> dict:
     product_ids = dedup_keep_order([it["product_id"] for it in items])
     products = [data.get_product(pid) for pid in product_ids]
 
-    category_names_en = dedup_keep_order(
-        [data.get_category_english(p.get("product_category_name")) for p in products if p]
+    category_names = dedup_keep_order(
+        [p.get("product_category_name") for p in products if p and p.get("product_category_name")]
     )
-    category_names_en = [c for c in category_names_en if c]
 
     return {
         "items": items,
         "seller_ids": seller_ids,
         "sellers": sellers,
         "product_ids": product_ids,
-        "category_names": category_names_en,
+        "category_names": category_names,
         "multi_item_order": len(items) >= 2,
         "multi_seller_order": len(seller_ids) >= 2,
-        "multiple_categories": len(category_names_en) >= 2,
+        "multiple_categories": len(category_names) >= 2,
     }
