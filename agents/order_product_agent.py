@@ -91,7 +91,7 @@ class OrderProductAgent:
             if pd.isna(cat_pt) or cat_pt in seen_cats:
                 continue
             seen_cats.add(cat_pt)
-            category_names_raw.append(self.store.translate_category(str(cat_pt)))
+            category_names_raw.append(str(cat_pt))
 
         category_names = category_names_raw[:5]
 

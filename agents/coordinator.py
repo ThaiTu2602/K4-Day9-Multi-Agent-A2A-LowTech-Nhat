@@ -226,7 +226,7 @@ class CoordinatorAgent:
         }
         for path in (TRACE_PATH_ROOT, TRACE_PATH_LOG):
             path.parent.mkdir(exist_ok=True)
-            with open(path, "a", encoding="utf-8") as f:
+            with open(path, "a", encoding="utf-8", newline="\n") as f:
                 f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
     # ── Metadata ──────────────────────────────────────────────────────────────
@@ -273,7 +273,7 @@ class CoordinatorAgent:
         }
         for path in (META_PATH_ROOT, META_PATH_LOG):
             path.parent.mkdir(exist_ok=True)
-            with open(path, "w", encoding="utf-8") as f:
+            with open(path, "w", encoding="utf-8", newline="\n") as f:
                 json.dump(meta, f, indent=2, ensure_ascii=False)
 
 

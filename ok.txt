@@ -1,5 +1,5 @@
 {
-  "case_id": "EC_038",
+  "case_id": "EC_001",
   "case_assessment": {
     "primary_issue": "unsupported_late_claim",
     "secondary_issues": [
@@ -7,47 +7,48 @@
       "repeat_customer"
     ],
     "case_status": "no_action",
-    "confidence": 0.85
+    "confidence": 0.88
   },
   "affected_entities": {
     "order_ids": [
-      "efcd8852328a37fca811747c09c6fb69"
+      "9b75cdaf2d85857ef023980e15d01546"
     ],
     "item_ids": [
-      "efcd8852328a37fca811747c09c6fb69:1",
-      "efcd8852328a37fca811747c09c6fb69:2"
+      "9b75cdaf2d85857ef023980e15d01546:1",
+      "9b75cdaf2d85857ef023980e15d01546:2"
     ],
     "seller_ids": [
-      "520b493b57809f446cb0a233bb3e25c7"
+      "c70c1b0d8ca86052f45a432a38b73958"
     ],
     "payment_ids": [
-      "efcd8852328a37fca811747c09c6fb69:1"
+      "9b75cdaf2d85857ef023980e15d01546:1"
     ]
   },
   "customer_context": {
-    "customer_unique_id": "9b7fcfa05fb6f8b88fea3d74a6ba77d6",
+    "customer_unique_id": "bbf65e7823171a84e70a495dd6c34ceb",
     "related_order_ids": [
-      "44d14514a06127f72cd96745ed0eed21"
+      "65bbd0719855fe808bb19f62dfa9f42c"
     ]
   },
   "product_context": {
     "product_ids": [
-      "cf8c83ef74f69705d1bec196473b1b45"
+      "0a4f9f421af66d2ea061fbb8883419f7",
+      "43b54d1fc56ff394092a3dff6be2d39f"
     ],
     "category_names": [
-      "cama_mesa_banho"
+      "beleza_saude"
     ]
   },
   "delivery_analysis": {
-    "delivered_at": "2017-05-24 15:05:49",
-    "estimated_delivery_at": "2017-06-02 00:00:00",
-    "carrier_handoff_at": "2017-05-22 12:48:50",
-    "delivery_variance_hours": -200.9,
+    "delivered_at": "2018-06-19 01:28:42",
+    "estimated_delivery_at": "2018-06-26 00:00:00",
+    "carrier_handoff_at": "2018-06-15 14:15:00",
+    "delivery_variance_hours": -166.52,
     "seller_handoff_analysis": [
       {
-        "seller_id": "520b493b57809f446cb0a233bb3e25c7",
-        "shipping_limit_at": "2017-05-25 09:31:35",
-        "handoff_variance_hours": -68.71,
+        "seller_id": "c70c1b0d8ca86052f45a432a38b73958",
+        "shipping_limit_at": "2018-06-18 07:57:36",
+        "handoff_variance_hours": -65.71,
         "late_handoff": false
       }
     ],
@@ -55,10 +56,10 @@
   },
   "payment_reconciliation": {
     "currency": "BRL",
-    "item_total_brl": 40.0,
-    "freight_total_brl": 19.88,
-    "expected_total_brl": 59.88,
-    "payment_total_brl": 59.88,
+    "item_total_brl": 220.64,
+    "freight_total_brl": 16.7,
+    "expected_total_brl": 237.34,
+    "payment_total_brl": 237.34,
     "difference_brl": 0.0,
     "reconciled": true,
     "payment_types": [
@@ -75,10 +76,10 @@
     "responsible_parties": []
   },
   "evidence_ids": [
-    "order:efcd8852328a37fca811747c09c6fb69",
-    "item:efcd8852328a37fca811747c09c6fb69:1",
-    "item:efcd8852328a37fca811747c09c6fb69:2",
-    "payment:efcd8852328a37fca811747c09c6fb69:1",
+    "order:9b75cdaf2d85857ef023980e15d01546",
+    "item:9b75cdaf2d85857ef023980e15d01546:1",
+    "item:9b75cdaf2d85857ef023980e15d01546:2",
+    "payment:9b75cdaf2d85857ef023980e15d01546:1",
     "policy:DELIVERY_WITHIN_ESTIMATE"
   ],
   "financial_resolution": {

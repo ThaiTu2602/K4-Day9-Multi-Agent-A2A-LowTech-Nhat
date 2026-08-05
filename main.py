@@ -64,7 +64,7 @@ def run(case_ids: list[str] | None = None) -> None:
             result = coordinator.process(case)
 
             output_file = OUTPUT_DIR / input_file.name
-            with open(output_file, "w", encoding="utf-8") as f:
+            with open(output_file, "w", encoding="utf-8", newline="\n") as f:
                 json.dump(result, f, indent=2, ensure_ascii=False)
 
             success += 1
