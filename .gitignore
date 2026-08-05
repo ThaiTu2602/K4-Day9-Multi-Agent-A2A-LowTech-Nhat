@@ -1,0 +1,19 @@
+# Environment variables & secrets
+.env
+input/.env
+*.env
+
+# Python Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Zip files & audit temporary files
+*.zip
+output.zip

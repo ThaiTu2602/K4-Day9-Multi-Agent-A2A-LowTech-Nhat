@@ -4,13 +4,13 @@
 
 ## 1. Thông tin cá nhân
 
-| Thông tin       | Nội dung     |
-| --------------- | ------------ |
-| Họ và tên       | [Họ và tên]  |
-| MSSV            | [MSSV]       |
-| Khóa/Lớp        | [K4]         |
-| Vai trò chính   | [Vai trò]    |
-| Ngày hoàn thành | [YYYY-MM-DD] |
+| Thông tin       | Nội dung        |
+| -----------------| -----------------|
+| Họ và tên       | Nguyễn Việt Hải |
+| MSSV            | 2A202601656     |
+| Khóa/Lớp        | [K4]            |
+| Vai trò chính   | [Vai trò]       |
+| Ngày hoàn thành | [YYYY-MM-DD]    |
 
 ## 2. Vai trò và phạm vi công việc
 
@@ -97,25 +97,25 @@ Nếu chưa xử lý xong:
 
 Giải thích ngắn gọn bằng lời của bạn:
 
-1. Dữ liệu đi từ Crossref đến vector index như thế nào?
-2. Evaluation set và ground-truth document IDs dùng để đo retrieval/answer quality ra sao?
-3. Quality checks khác freshness monitoring ở điểm nào trong bài lab?
-4. Vì sao phải dùng cùng test set cho baseline, corrupted và repaired?
-5. Repair được xem là thành công dựa trên artifact và metric nào?
-
-**Câu trả lời:**
-
-[Viết câu trả lời tại đây.]
+1. **Dữ liệu đi từ CSV Olist đến Multi-Agent Pipeline như thế nào?**
+   Dữ liệu 9 file CSV Olist trong `data/` được nạp vào memory (Pandas DataFrames) và tạo sẵn index theo `order_id`, `customer_id`, `product_id`, `seller_id` để các Agent truy vấn nhanh chóng.
+2. **Evaluation set 50 cases dùng để đối soát ra sao?**
+   Bộ 50 file `input/EC_001.json` - `EC_050.json` cung cấp `claimed_order_id` và phạm vi điều tra. Hệ thống đối chiếu dữ liệu giao hàng, thanh toán và áp dụng bảng quy tắc `EC_POLICY_V2` để đưa ra kết luận chuẩn xác.
+3. **Verifier Agent đóng vai trò gì trong pipeline?**
+   Verifier Agent kiểm tra chất lượng (Quality Check) độc lập trước khi xuất file: xác minh cấu trúc Schema, cắt giới hạn độ dài mảng (max 5 order, 5 item, 3 seller, 20 evidence...), kiểm tra format Evidence IDs và dải giá trị confidence `[0, 1]`.
+4. **Vì sao phải ghi vết trace.jsonl?**
+   File `trace.jsonl` ghi lại toàn bộ sự kiện handoff thực tế giữa các Agent trong hệ thống, đảm bảo tính minh bạch, tái hiện được luồng điều tra (reproducibility) và chứng minh hệ thống thực sự sử dụng Multi-Agent.
 
 ## 8. Cam kết của thành viên
 
 Đánh dấu sau khi tự kiểm tra:
 
-- [ ] Nội dung báo cáo phản ánh đúng phần việc và mức hiểu của tôi.
-- [ ] Tôi có thể giải thích luồng end-to-end, không chỉ module mình phụ trách.
-- [ ] Tôi không ghi “đã chạy thành công” cho phần chưa được kiểm chứng.
-- [ ] Báo cáo không chứa `.env`, API key, token hoặc secret.
-- [ ] Báo cáo này không phải bản sao nguyên văn của báo cáo nhóm hoặc báo cáo thành viên khác.
+- [x] Nội dung báo cáo phản ánh đúng phần việc và mức hiểu của tôi.
+- [x] Tôi có thể giải thích luồng end-to-end, không chỉ module mình phụ trách.
+- [x] Tôi không ghi “đã chạy thành công” cho phần chưa được kiểm chứng.
+- [x] Báo cáo không chứa `.env`, API key, token hoặc secret.
+- [x] Báo cáo này không phải bản sao nguyên văn của báo cáo nhóm hoặc báo cáo thành viên khác.
 
-**Họ và tên:** [Họ và tên]
-**Ngày xác nhận:** [YYYY-MM-DD]
+**Họ và tên:** Nguyễn Việt Hải  
+**Ngày xác nhận:** 2026-08-05  
+
