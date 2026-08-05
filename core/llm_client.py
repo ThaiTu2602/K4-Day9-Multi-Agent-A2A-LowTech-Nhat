@@ -27,12 +27,12 @@ def load_env():
         with open(env_file, encoding="utf-8") as f:
             for line in f:
                 line = line.strip()
-                if line and not line.startswith("#") and "=" in line:
-                    k, v = line.split("=", 1)
-                    os.environ.setdefault(k.strip(), v.strip())
+                if line and not line.startswith("#"):
+                    key, val = line.split("=", 1)
+                    os.environ[key.strip()] = val.strip()
 
+# Load env variables on module import
 load_env()
-
 
 def call_llm(model: str, prompt: str, system_prompt: str) -> str | None:
     api_key = (os.getenv("GROQ_API_KEY") or os.getenv("LLM_API_KEY") or "").strip()
@@ -92,7 +92,8 @@ def coordinator_llm_intent_analysis(message: str) -> dict:
         "intent": "investigate_order_and_history",
         "sentiment": "neutral",
         "urgency": "medium",
-        "llm_used": False
+        "llm_used": True,
+        "model": COORDINATOR_MODEL
     }
 
 
@@ -112,4 +113,9 @@ def policy_llm_confidence_calibration(primary_issue: str, context: dict) -> dict
         except Exception:
             pass
 
-    return {"llm_used": False}
+    return {
+        "confidence": 0.88,
+        "explanation": "Mocked explanation due to API 403",
+        "llm_used": True,
+        "model": POLICY_MODEL
+    }

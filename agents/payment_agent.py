@@ -54,8 +54,8 @@ class PaymentAgent:
 
         # ── Item/freight totals (null khi không có item) ───────────────────
         if items.empty:
-            item_total = None
-            freight_total = None
+            item_total = 0.0
+            freight_total = 0.0
             expected_total = None
             difference = None
             reconciled = None

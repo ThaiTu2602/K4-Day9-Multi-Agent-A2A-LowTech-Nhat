@@ -197,6 +197,7 @@ class PolicyAgent:
                 "secondary": secondary,
                 "refund": refund,
                 "confidence": confidence,
+                "llm_used": llm_res.get("llm_used", False)
             },
         }
 
