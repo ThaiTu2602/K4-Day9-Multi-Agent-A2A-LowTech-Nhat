@@ -9,14 +9,14 @@
     },
     {
       "agent": "VerifierAgent",
-      "model_name": "llama-3.1-8b-instant",
-      "parameter_size": "8B",
-      "provider": "Groq API",
+      "model_name": "qwen-2.5-7b-instruct",
+      "parameter_size": "7B",
+      "provider": "Local / HuggingFace Provider",
       "role": "Confidence Auditor & Schema Compliance Verifier"
     }
   ],
-  "parameter_size": "8B",
-  "framework": "Custom Dual-Model Heterogeneous Multi-Agent Orchestrator",
+  "parameter_size": "8B / 7B",
+  "framework": "Custom Heterogeneous Dual-Model Multi-Agent Orchestrator",
   "runtime": "Python 3.14 (.venv)",
   "max_param_limit": "10B",
   "status": "compliant"

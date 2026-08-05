@@ -35,7 +35,7 @@
 | **Xây dựng luồng điều phối 6 Agent** | `src/coordinator.py` | Luồng điều phối tuần tự 6 bước Handoff | Ghi nhật ký vết `trace.jsonl` (50 dòng) |
 | **Triển khai quy tắc EC_POLICY_V2 & LLM Reasoning** | `src/agents/policy_agent.py` | Phân loại lỗi chính/phụ & Refund BRL | 50 file JSON tại `output/` |
 | **Triển khai Verifier Agent & Audit Confidence** | `src/agents/verifier_agent.py` | Kiểm tra giới hạn mảng & Audit confidence | Chạy hàm `verify_and_clean()` |
-| **Thiết lập Heterogeneous Dual-Model Architecture** | `metadata.json`, `architecture.md` | Cấu hình mô hình Llama-3.1-8B-Instant | File `metadata.json` & `architecture.md` |
+| **Thiết lập Heterogeneous Dual-Model Architecture** | `metadata.json`, `architecture.md` | Cấu hình 2 mô hình Llama-3.1-8B-Instant (8B) & Qwen-2.5-7B-Instruct (7B) | File `metadata.json` & `architecture.md` |
 
 ### Bàn giao Output Cụ thể
 - **50 File JSON Output (`output/EC_001.json` -> `EC_050.json`)**: Chứa kết quả điều tra khiếu nại của 50 đơn hàng với đầy đủ phân loại lỗi, bằng chứng `evidence_ids`, hành động xử lý và điểm tin cậy `confidence` biến thiên linh hoạt `[0.82 - 0.99]`.
