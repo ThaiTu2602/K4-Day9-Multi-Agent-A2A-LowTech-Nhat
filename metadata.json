@@ -1,0 +1,21 @@
+{
+  "model": "llama-3.1-8b-instant",
+  "parameter_size": "8B",
+  "provider": "Groq (cloud API, OpenAI-compatible endpoint)",
+  "framework": "custom Python multi-agent pipeline (no agent framework dependency)",
+  "runtime": {
+    "python_version": "3.14.6",
+    "os": "win32"
+  },
+  "agents": [
+    "customer_agent",
+    "order_product_agent",
+    "payment_agent",
+    "delivery_agent",
+    "policy_agent",
+    "verifier_agent"
+  ],
+  "policy_version": "EC_POLICY_V2",
+  "cases_processed": 50,
+  "elapsed_seconds": 503.04
+}
