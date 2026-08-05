@@ -6,11 +6,11 @@
 
 | Thông tin       | Nội dung     |
 | --------------- | ------------ |
-| Họ và tên       | [Họ và tên]  |
-| MSSV            | [MSSV]       |
+| Họ và tên       | Nguyễn Hoàng Minh  |
+| MSSV            | 2A202601764       |
 | Khóa/Lớp        | [K4]         |
 | Vai trò chính   | [Vai trò]    |
-| Ngày hoàn thành | [YYYY-MM-DD] |
+| Ngày hoàn thành | [2026-08-05] |
 
 ## 2. Vai trò và phạm vi công việc
 

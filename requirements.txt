@@ -1,0 +1,8 @@
+# He thong nay CHI dung thu vien chuan cua Python 3.11+.
+# Khong co dependency bat buoc nao: client LLM viet bang urllib, doc CSV bang csv,
+# chay song song bang concurrent.futures, tinh tien bang decimal.
+#
+# Trong mot cuoc thi 4 tieng, moi dependency la them mot cho co the vo.
+
+# Chi can cho unit test (khong can de chay pipeline)
+pytest>=7.0.0

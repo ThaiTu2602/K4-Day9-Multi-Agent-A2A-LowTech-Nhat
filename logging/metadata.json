@@ -1,0 +1,137 @@
+{
+  "framework": "custom-a2a-orchestrator",
+  "policy_version": "EC_POLICY_V2",
+  "parameter_size_constraint": "<= 10B",
+  "max_parameter_size_used_b": 9.0,
+  "providers": [
+    {
+      "key": "openrouter",
+      "display_name": "OpenRouter",
+      "base_url": "https://openrouter.ai/api/v1"
+    },
+    {
+      "key": "groq",
+      "display_name": "Groq",
+      "base_url": "https://api.groq.com/openai/v1"
+    }
+  ],
+  "models": [
+    {
+      "model_id": "nvidia/nemotron-nano-9b-v2:free",
+      "display_name": "NVIDIA Nemotron Nano 9B V2",
+      "provider": "openrouter",
+      "parameter_size_b": 9.0,
+      "context_length": 128000
+    },
+    {
+      "model_id": "llama-3.1-8b-instant",
+      "display_name": "Meta Llama 3.1 8B Instant",
+      "provider": "groq",
+      "parameter_size_b": 8.0,
+      "context_length": 131072
+    }
+  ],
+  "agents": [
+    {
+      "name": "coordinator",
+      "role": "Nhan ticket, giao viec cho cac agent chuyen trach, gop handoff card, assemble output.",
+      "provider": "openrouter",
+      "model_id": "nvidia/nemotron-nano-9b-v2:free",
+      "parameter_size_b": 9.0,
+      "allowed_tables": []
+    },
+    {
+      "name": "customer_agent",
+      "role": "Xac dinh customer_unique_id va lich su order khac cua cung khach hang.",
+      "provider": "groq",
+      "model_id": "llama-3.1-8b-instant",
+      "parameter_size_b": 8.0,
+      "allowed_tables": [
+        "customers",
+        "orders"
+      ]
+    },
+    {
+      "name": "order_product_agent",
+      "role": "Kiem tra order status, item, seller, product va category.",
+      "provider": "groq",
+      "model_id": "llama-3.1-8b-instant",
+      "parameter_size_b": 8.0,
+      "allowed_tables": [
+        "orders",
+        "order_items",
+        "products",
+        "sellers",
+        "category_translation"
+      ]
+    },
+    {
+      "name": "payment_agent",
+      "role": "Tong hop payment row va doi soat voi item + freight.",
+      "provider": "groq",
+      "model_id": "llama-3.1-8b-instant",
+      "parameter_size_b": 8.0,
+      "allowed_tables": [
+        "order_payments",
+        "order_items"
+      ]
+    },
+    {
+      "name": "delivery_agent",
+      "role": "Tinh delivery variance va seller handoff variance.",
+      "provider": "groq",
+      "model_id": "llama-3.1-8b-instant",
+      "parameter_size_b": 8.0,
+      "allowed_tables": [
+        "orders",
+        "order_items"
+      ]
+    },
+    {
+      "name": "policy_agent",
+      "role": "Ap EC_POLICY_V2: primary/secondary issue, root cause, responsible party, refund va resolution actions. Khong duoc doc CSV, chi ket luan tu handoff card.",
+      "provider": "openrouter",
+      "model_id": "nvidia/nemotron-nano-9b-v2:free",
+      "parameter_size_b": 9.0,
+      "allowed_tables": []
+    },
+    {
+      "name": "verifier_agent",
+      "role": "Kiem tra ID, so tien, null handling, array limit va schema truoc khi ghi file.",
+      "provider": "openrouter",
+      "model_id": "nvidia/nemotron-nano-9b-v2:free",
+      "parameter_size_b": 9.0,
+      "allowed_tables": [
+        "orders",
+        "order_items",
+        "order_payments",
+        "customers",
+        "products",
+        "sellers"
+      ]
+    }
+  ],
+  "runtime": {
+    "llm_calls_by_model": {
+      "openrouter/nvidia/nemotron-nano-9b-v2:free": 9,
+      "groq/llama-3.1-8b-instant": 26
+    },
+    "llm_calls_total": 35,
+    "llm_errors": 0,
+    "llm_parse_failures": 0,
+    "model_fallbacks": 2,
+    "python": "3.13.0",
+    "os": "Darwin 25.3.0",
+    "run_at": "2026-08-05T16:30:46+0700",
+    "cases_total": 3,
+    "cases_passed_hard_gates": 3,
+    "wall_clock_s": 267.83,
+    "concurrency": 4,
+    "temperature": 0.0,
+    "top_p": 1.0,
+    "seed": 42,
+    "cache_enabled": true,
+    "policy_agent_agreed_with_rule_engine": 2,
+    "policy_agent_overridden": 1
+  }
+}
