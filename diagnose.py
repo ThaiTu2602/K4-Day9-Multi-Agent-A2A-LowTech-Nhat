@@ -4,6 +4,7 @@ Diagnostic script — phan tich trace.jsonl de tim:
   2. Cross-case: thong ke tong hop 50 case
 Chay: python diagnose.py
 """
+
 import json
 import sys
 from pathlib import Path

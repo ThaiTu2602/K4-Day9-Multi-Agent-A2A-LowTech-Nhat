@@ -9,24 +9,46 @@ Hệ thống xử lý khiếu nại thương mại điện tử (E-commerce Disp
 
 ```mermaid
 graph TD
-    UserRequest([Input Request EC_xxx.json]) --> Agent1[Agent 1: Coordinator Agent\nmodel: llama-3.1-8b-instant]
+    %% Styling
+    classDef llm fill:#f9f,stroke:#333,stroke-width:2px,color:#000
+    classDef rule fill:#bbf,stroke:#333,stroke-width:1px,color:#000
+    classDef data fill:#dfd,stroke:#333,stroke-width:1px,color:#000
+    classDef io fill:#fbd,stroke:#333,stroke-width:2px,color:#000,stroke-dasharray: 5 5
+
+    %% Nodes
+    Input([📄 Input: EC_xxx.json]):::io
+    Output([✅ Output: output/EC_xxx.json]):::io
     
-    subgraph Data Specialists (Deterministic 0B)
-        Agent1 --> Agent2[Agent 2: Customer Agent\ncustomers.csv & orders.csv]
-        Agent1 --> Agent3[Agent 3: Order & Product Agent\norder_items, products, sellers]
-        Agent1 --> Agent4[Agent 4: Payment Agent\norder_payments.csv]
-        Agent1 --> Agent5[Agent 5: Delivery Agent\norders.csv & order_items.csv]
+    A1["🤖 Agent 1: Coordinator<br>(LLM: llama-3.1-8b-instant)"]:::llm
+    
+    subgraph Data Specialists ["🔍 Deterministic Specialist Agents (Rule-based 0B)"]
+        direction TB
+        A2["👤 Agent 2: Customer<br>(customers.csv, orders.csv)"]:::rule
+        A3["📦 Agent 3: Order & Product<br>(order_items.csv, products.csv)"]:::rule
+        A4["💳 Agent 4: Payment<br>(order_payments.csv)"]:::rule
+        A5["🚚 Agent 5: Delivery<br>(orders.csv)"]:::rule
     end
 
-    Agent2 --> Handoff[Handoff Data Payload]
-    Agent3 --> Handoff
-    Agent4 --> Handoff
-    Agent5 --> Handoff
-
-    Handoff --> Agent6[Agent 6: Policy Agent\nmodel: gemma2-9b-it\nRule Engine EC_POLICY_V2]
+    Handoff[("💾 Unified Handoff Payload")]:::data
     
-    Agent6 --> Verifier[Output Assembly & Verification]
-    Verifier --> FinalJSON([Output output/EC_xxx.json])
+    A6["🧠 Agent 6: Policy Agent<br>(LLM: gemma2-9b-it + EC_POLICY_V2)"]:::llm
+    Assemble["⚙️ Assembler & Validator"]:::data
+
+    %% Connections
+    Input -->|Parse Intent| A1
+    A1 -->|Parallel Dispatch| A2
+    A1 -->|Parallel Dispatch| A3
+    A1 -->|Parallel Dispatch| A4
+    A1 -->|Parallel Dispatch| A5
+
+    A2 -->|Customer Context| Handoff
+    A3 -->|Product/Entity Context| Handoff
+    A4 -->|Payment Reconciliation| Handoff
+    A5 -->|Delivery Analysis| Handoff
+
+    Handoff -->|Rule Evaluation & Confidence Scoring| A6
+    A6 -->|Decisions & Evidence| Assemble
+    Assemble -->|Format JSON| Output
 ```
 
 ---
