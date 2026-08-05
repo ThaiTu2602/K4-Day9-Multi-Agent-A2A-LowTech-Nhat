@@ -95,13 +95,13 @@ class DeliveryAgent:
         seller_handoff_analysis: list[dict] = []
         late_handoff_seller_ids: list[str] = []
 
-        if not items.empty:
+        if not items.empty and carrier_at is not None:
             # Nhóm theo seller_id, lấy earliest shipping_limit_date
             for seller_id, grp in items.groupby("seller_id", sort=False):
                 limit_raw = grp["shipping_limit_date"].min()
                 limit = limit_raw if not _is_nat(limit_raw) else None
 
-                if limit is not None and carrier_at is not None:
+                if limit is not None:
                     hv = _hours(carrier_at - limit)
                     is_late = hv is not None and hv > 0
                 else:
