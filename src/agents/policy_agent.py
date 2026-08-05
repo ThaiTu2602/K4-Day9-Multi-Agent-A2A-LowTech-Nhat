@@ -112,8 +112,8 @@ def _actions(primary: str, secondary_issues: list[str]) -> list[str]:
     return actions[:5]
 
 
-def _confidence(primary: str, is_fallback: bool, op: dict, pay: dict, cust: dict) -> float:
-    score = 0.95
+def _confidence(primary: str, is_fallback: bool, op: dict, pay: dict, cust: dict, secondary_issues: list[str]) -> float:
+    score = 1.0 - 0.06 * len(secondary_issues)
     if is_fallback:
         score -= 0.35
     if not op["items"]:
@@ -131,7 +131,7 @@ def decide(order: dict, op: dict, pay: dict, deliv: dict, cust: dict) -> dict:
     root_cause = ROOT_CAUSE_BY_PRIMARY[primary]
     actions = _actions(primary, secondary_issues)
     case_status = "action_required" if primary in ACTION_REQUIRED_PRIMARIES else "no_action"
-    confidence = _confidence(primary, is_fallback, op, pay, cust)
+    confidence = _confidence(primary, is_fallback, op, pay, cust, secondary_issues)
 
     return {
         "primary_issue": primary,
