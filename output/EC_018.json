@@ -18,8 +18,8 @@
       "f396e1280028fa9c8c83111abee5f2e9:2"
     ],
     "seller_ids": [
-      "f7ba60f8c3f99e7ee4042fdef03b70c4",
-      "ccc4bbb5f32a6ab2b7066a4130f114e3"
+      "ccc4bbb5f32a6ab2b7066a4130f114e3",
+      "f7ba60f8c3f99e7ee4042fdef03b70c4"
     ],
     "payment_ids": [
       "f396e1280028fa9c8c83111abee5f2e9:1"
@@ -35,7 +35,7 @@
       "9b1954fdd0f9b4ef4ee2d267ac9de4bd"
     ],
     "category_names": [
-      "health_beauty"
+      "beleza_saude"
     ]
   },
   "delivery_analysis": {

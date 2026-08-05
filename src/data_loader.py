@@ -18,13 +18,8 @@ class DataLoader:
         self.items_df = pd.read_csv(DATA_DIR / "olist_order_items_dataset.csv")
         self.payments_df = pd.read_csv(DATA_DIR / "olist_order_payments_dataset.csv")
         self.products_df = pd.read_csv(DATA_DIR / "olist_products_dataset.csv")
-        self.translation_df = pd.read_csv(DATA_DIR / "product_category_name_translation.csv")
         self.sellers_df = pd.read_csv(DATA_DIR / "olist_sellers_dataset.csv")
         self.reviews_df = pd.read_csv(DATA_DIR / "olist_order_reviews_dataset.csv")
-        
-        # Create category translation map
-        self.cat_map = dict(zip(self.translation_df['product_category_name'], self.translation_df['product_category_name_english']))
-        
         print("Datasets successfully loaded into memory.")
 
     def get_order(self, order_id: str):
@@ -56,10 +51,4 @@ class DataLoader:
         match = self.products_df[self.products_df['product_id'] == product_id]
         if match.empty:
             return None
-        prod = match.iloc[0].to_dict()
-        cat_pt = prod.get('product_category_name')
-        if cat_pt and cat_pt in self.cat_map:
-            prod['category_name_english'] = self.cat_map[cat_pt]
-        else:
-            prod['category_name_english'] = cat_pt
-        return prod
+        return match.iloc[0].to_dict()

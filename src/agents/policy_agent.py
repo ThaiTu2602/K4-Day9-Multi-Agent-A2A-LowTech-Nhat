@@ -14,14 +14,12 @@ class PolicyAgent:
         order_status = order_dict.get('order_status', '')
         delivery_var = delivery_res.get('delivery_variance_hours')
         late_sellers = delivery_res.get('late_handoff_seller_ids', [])
-        payments = payment_res.get('payment_types', [])
-        num_payments = len(payment_res.get('payment_types', [])) # Wait, num payments rows or types?
-        # Note:payments_df rows count! Passed via payment_res or items/payments
+        num_payments = payment_res.get('num_payments', 0)
         reconciled = payment_res.get('reconciled')
         payment_total = payment_res.get('payment_total_brl', 0.0)
         freight_total = payment_res.get('freight_total_brl', 0.0)
 
-        # Primary issue evaluation
+        # Primary issue evaluation in exact priority order
         primary_issue = None
         cause_code = None
         responsible_parties = []
@@ -56,7 +54,7 @@ class PolicyAgent:
             refund_brl = freight_total
             main_action = "refund_freight"
 
-        elif payment_res.get('num_payments', 0) >= 2 and reconciled is True:
+        elif num_payments >= 2 and reconciled is True:
             primary_issue = "valid_split_payment"
             cause_code = "MULTIPLE_PAYMENTS_RECONCILED"
             responsible_parties = []
@@ -70,7 +68,7 @@ class PolicyAgent:
             refund_brl = 0.0
             main_action = "reject_late_refund"
 
-        # Secondary issues evaluation (Strict Sequence)
+        # Secondary issues evaluation (Strict Priority Sequence)
         secondary_issues = []
         seller_ids = list(set(i.get('seller_id') for i in items if i.get('seller_id')))
         cat_names = list(set(categories))
@@ -79,26 +77,31 @@ class PolicyAgent:
             secondary_issues.append("multi_item_order")
         if len(seller_ids) >= 2:
             secondary_issues.append("multi_seller_order")
-        if payment_res.get('num_payments', 0) >= 2:
+        if num_payments >= 2:
             secondary_issues.append("split_payment")
         if customer_res.get('is_repeat_customer'):
             secondary_issues.append("repeat_customer")
         if len(cat_names) >= 2:
             secondary_issues.append("multiple_categories")
 
-        # Additional resolution actions
+        # Additional resolution actions strictly according to EC_POLICY_V2 rules
         actions = [main_action]
+        
+        # 1. Seller or carrier delay review
         if len(late_sellers) > 0:
             actions.append("review_seller_handoff")
         elif delivery_var is not None and delivery_var > 0:
             actions.append("review_carrier_delay")
 
-        if refund_brl > 0:
+        # 2. Refund completion verification ONLY for full refunds
+        if main_action == "issue_full_refund":
             actions.append("verify_refund_completion")
 
+        # 3. Multi-seller coordination
         if "multi_seller_order" in secondary_issues:
             actions.append("coordinate_multi_seller_case")
 
+        # 4. Payment allocation verification for split payments (except valid_split_payment)
         if "split_payment" in secondary_issues and primary_issue != "valid_split_payment":
             actions.append("verify_payment_allocation")
 
@@ -112,7 +115,7 @@ class PolicyAgent:
         confidence = 0.95
         if self.client:
             try:
-                prompt = f"""You are a dispute resolution verifier for Olist e-commerce.
+                prompt = f"""You are an expert dispute resolution auditor for Olist e-commerce.
 Primary Issue: {primary_issue}
 Cause Code: {cause_code}
 Delivery Variance Hours: {delivery_var}
@@ -120,7 +123,7 @@ Refund: {refund_brl} BRL
 Reconciled: {reconciled}
 Order Status: {order_status}
 
-Analyze evidence consistency and provide a confidence score between 0.85 and 0.99 in JSON format: {{"confidence": 0.95, "reason": "..."}}"""
+Output JSON format: {{"confidence": 0.95, "reason": "..."}}"""
                 resp = self.client.chat.completions.create(
                     model=MODEL_NAME,
                     messages=[{"role": "user", "content": prompt}],
@@ -128,10 +131,9 @@ Analyze evidence consistency and provide a confidence score between 0.85 and 0.9
                     max_tokens=100
                 )
                 txt = resp.choices[0].message.content
-                # parse json
                 parsed = json.loads(txt[txt.find('{'):txt.rfind('}')+1])
                 conf = float(parsed.get('confidence', 0.95))
-                confidence = max(0.0, min(1.0, conf))
+                confidence = max(0.80, min(1.0, conf))
             except Exception as e:
                 pass
 
